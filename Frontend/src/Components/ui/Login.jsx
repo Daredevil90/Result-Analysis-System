@@ -25,7 +25,7 @@ export default function Login()
    
     try {
       // console.log(data)
-      const response = await axios.post('http://localhost:3000/api/v1/users/login', data);
+      const response = await axios.post('http://localhost:3000/api/v1/users/login', data,{withCredentials:true});
       console.log("response data:", response.data.updatedUser, response.status);
       if (response.status === 200) {
       dispatch(login(response.data.updatedUser));
