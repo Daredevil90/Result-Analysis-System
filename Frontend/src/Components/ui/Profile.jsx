@@ -35,10 +35,8 @@ function stringAvatar(name) {
   
 export default function Profile({role,userData})
 {    const newDob= new Date(userData.dob);
-  console.log(newDob)
-
     return(
-           <Container minWidth="xs" maxWidth="sm" className="my-2 profile-container">
+           <Container minWidth="xs" maxWidth="sm" className="my-2 profile-container " >
             <Box height={300}>
              <Stack direction="column" spacing={2} className=" h-full w-full flex    bg-[#0066CC]" justifyContent="center"
   alignItems="center">

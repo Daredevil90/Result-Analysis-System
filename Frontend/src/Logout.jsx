@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './store/authSlice';
 import ErrorPrint from './Components/utils/ErrorPrint';
 import { Navigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Logout() {
   const [loggedOut, setLoggedOut] = useState(false);
@@ -30,7 +32,7 @@ export default function Logout() {
   }
   return (
     <>
-      <Button variant="contained" onClick={logoutConfirmation} size="small">Logout</Button>
+      <Button variant="contained" onClick={logoutConfirmation}  className='w-1/2 left-32' size="medium">Logout</Button>
       {loggedOut && <Navigate to="/" />}
       {error && <ErrorPrint content={error} />}
     </>

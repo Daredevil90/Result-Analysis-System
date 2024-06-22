@@ -1,7 +1,6 @@
 import React from "react";
 import { TextField, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
-import { useState } from "react";
 import {useDispatch} from "react-redux"
 import { login } from "../../store/authSlice.js";
 import { useForm } from "react-hook-form";
@@ -9,9 +8,8 @@ import axios from "axios";
 import { logout } from "../../store/authSlice.js";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { redirect } from "react-router-dom";
-import {Alert} from "@mui/material";
 import {Box} from "@mui/material";
+import { toast,ToastContainer } from "react-toastify";
 export default function Login()
 {  const authStatus= useSelector((state)=>state.auth.status);
     console.log(authStatus);
@@ -57,7 +55,7 @@ export default function Login()
    <TextField id="outlined-basic" label="Email Address" variant="outlined" {...register("email")}  className="sm:w-1/2 m-1"/>
    <TextField id="outlined-basic" label="Password" type="password" variant="outlined" {...register("password")}  className="sm:w-1/2 m-1" />
    <Button variant="contained" id="RegButton" type="submit">Sign In</Button>
-   {authStatus &&(<Navigate to="/"/>)}
+   {authStatus &&(toast.success("Logged In Successfully",{position:"top-right"}))&&(<Navigate to="/"/>)}
     {/* </form> */}
     </Box>
     )

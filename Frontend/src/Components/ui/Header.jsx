@@ -6,6 +6,7 @@ import { Divider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {Container} from "@mui/material";
+
 export default function Header()
 {    const authStatus= useSelector((state)=>state.auth.status);
     return(
@@ -29,7 +30,6 @@ export default function Header()
     ><NavLink to="/login">Sign In</NavLink></Link>
     </>)
     }
-   
       </Stack>
         </Container>
     )
