@@ -7,10 +7,14 @@ import Notauthenticated from './ui/Notauthenticated'
 function UserProfile() {
     const authStatus= useSelector((state)=>state.auth.status);
     const userdata= useSelector((state)=>state.auth.userData);
-    console.log(userdata)
+    const isAdmin = useSelector((state)=>state.auth.isAdmin)
+    let role="Student"
+    if(isAdmin){
+      role="Administrator"
+    }
   if(authStatus){
   return (
-    <Profile role={"Student"} userData={userdata} />
+    <Profile role={role} userData={userdata}/>
   )
 } 
 else{

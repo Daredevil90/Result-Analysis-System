@@ -5,13 +5,13 @@ const app = express();
 var whitelist = ["http://localhost:5173"]
 
 app.use(cors({
-     origin: process.env.CORS_ORIGIN,//function (origin, callback) {
-    //     if (whitelist.indexOf(origin) !== -1) {
-    //       callback(null, true)
-    //     } else {
-    //       callback(new Error('Not allowed by CORS'))
-    //     }
-    //   },
+     origin:function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
     credentials:true,
 }));
 app.use(express.json({

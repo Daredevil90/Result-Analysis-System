@@ -1,14 +1,16 @@
 import React from "react";
 import Stack from '@mui/material/Stack';
 import Link from '@mui/material/Link';
-import { NavLink } from "react-router-dom";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import { Divider } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {Container} from "@mui/material";
-
+import axios from "axios";
 export default function Header()
 {    const authStatus= useSelector((state)=>state.auth.status);
+     const adminStatus = useSelector((state)=>state.auth.isAdmin);
+     console.log(adminStatus)
     return(
         <Container component="nav" maxWidth="xl"  className="bg-black h-20 flex" > 
           <Stack spacing={5} direction="row"  divider={<Divider orientation="vertical" flexItem />} sx={{ color: 'primary.main' }} className=" justify-center h-full">
@@ -28,8 +30,12 @@ export default function Header()
       component="button"
       variant="h5"
     ><NavLink to="/login">Sign In</NavLink></Link>
-    </>)
+        </>)
     }
+     {adminStatus && (<><Link
+      component="button"
+      variant="h5"
+    ><NavLink to="/admin/upload">Upload Results</NavLink></Link> </>)  }
       </Stack>
         </Container>
     )

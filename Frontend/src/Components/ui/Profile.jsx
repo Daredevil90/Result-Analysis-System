@@ -57,7 +57,7 @@ export default function Profile({role,userData})
         />
            <TextField
           id="outlined-read-only-input"
-          label="College Name"
+          label="Affiliated College"
           defaultValue={userData.collegeName}
           InputProps={{
             readOnly: true,
