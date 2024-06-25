@@ -1,3 +1,4 @@
+import { Institution } from "../Models/Institution.model.js";
 import { User } from "../Models/User.model.js";
 const options={
   httpOnly:true,
@@ -12,7 +13,7 @@ const generateAccessandRefreshToken=async (_id)=>{
   await user.save({validateBeforeSave:false});
   return {refreshToken,accessToken};
 }
-const registerUser= async (req,res,next)=>{
+const registerUser= async (req,res)=>{
 try {
   const {password,email,fullname,collegeName,rollno,dob}= req.body;
      if(!password||!email||!fullname||!collegeName||!rollno||!dob){
@@ -88,7 +89,7 @@ const logoutUser= async (req,res)=>{
 
  try {
    if(!req.user){
-     return res.json({message:"User is not authenticated"});
+     return res.status(401).json({message:"User is not authenticated"});
    }
    const user= await User.findByIdAndUpdate(req.user._id,{$set:{$refreshToken:undefined}},{new:true});
    return res.status(200).clearCookie("accessToken",options).clearCookie("refreshToken",options).json({message:"User logged out succesfully"});
@@ -96,5 +97,39 @@ const logoutUser= async (req,res)=>{
   console.log(error)
  }
 }
-
-export {registerUser,loginUser,logoutUser}
+const checkIfUserisAuthorizedtoBeAdmin=async (req,res)=>{
+  try {
+    if(!req.user){
+      return res.status(401).json({message:"User is not authenticated"});
+    }
+   const userrecord = await User.findById(req.user._id);
+   const {collegeName}= userrecord;
+   console.log(collegeName)
+   const record= await Institution.findOne({name:collegeName}).select("-password -address -accessToken")
+   if(!record){
+    return res.status(401).json({message:"Institution or Organization not Registered"})
+   }
+   if(userrecord.email.includes(record.domain_name)){
+      userrecord.isAdmin=true;
+       const currentUser= await userrecord.save();
+     if(!currentUser){
+      return res.status(500).json(currentUser);
+     }
+     return res.status(200).json("Granted Admin Rights");
+     }
+     else{
+      return res.status(401).json({message:"Sign Up using Institution email to gain Admin Access"})
+     }
+  }
+   catch (error) {
+    console.log(error);
+   }
+}
+const handleExcelSubmission=async (req,res)=>{
+const excelFile = req.file
+if(excelFile){
+  return res.status(200).json({message:"Excel File uplaoded Successfully"})
+}
+return res.status(400).json({message:"Error in File Upload"})
+}
+export {registerUser,loginUser,logoutUser,checkIfUserisAuthorizedtoBeAdmin,handleExcelSubmission}
