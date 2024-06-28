@@ -1,5 +1,8 @@
 import { Institution } from "../Models/Institution.model.js";
+import Result  from "../Models/Result.model.js";
 import { User } from "../Models/User.model.js";
+import ExcelJS from 'exceljs';
+import fs from "fs"
 const options={
   httpOnly:true,
   secure:true
@@ -67,8 +70,6 @@ const loginUser= async(req,res)=>{
        return res.status(400).json({message:"Password incorrect pls try again"});
      }
    const{ accessToken, refreshToken}=await generateAccessandRefreshToken(existingUser._id);
-   console.log(accessToken);
-   console.log(refreshToken);
    if(!accessToken){
      return res.status(400).json({message: "Error in creating accessToken"});
    }
@@ -80,7 +81,7 @@ const loginUser= async(req,res)=>{
     return res.status(400).json({message:"User not found"});
     }
     console.log(updatedUser);
-    return res.cookie('accessToken',accessToken,options).cookie("refreshToken",refreshToken,options).status(200).json({updatedUser,refreshToken,accessToken,message:"User logged in successfully"});
+    return res.cookie('accessToken',accessToken,options).cookie("refreshToken",refreshToken,options).status(200).json({updatedUser,accessToken,message:"User logged in successfully"});
  } catch (error) {
   console.log(error)
  }  
@@ -126,10 +127,56 @@ const checkIfUserisAuthorizedtoBeAdmin=async (req,res)=>{
    }
 }
 const handleExcelSubmission=async (req,res)=>{
-const excelFile = req.file
-if(excelFile){
-  return res.status(200).json({message:"Excel File uplaoded Successfully"})
+try {
+  const excelFile = req.file
+  if(!excelFile){
+    return res.status(400).json({message:"Error in File Upload"})
+  }
+  console.log(excelFile);
+    const filePath = req.file.path;
+   const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
+
+    // Get the first worksheet
+    const worksheet = workbook.worksheets[0];
+
+    // Convert worksheet to JSON
+    const jsonData = [];
+    worksheet.eachRow((row, rowNumber) => {
+      const rowValues = row.values.slice(1); // Remove the empty first element
+      jsonData.push(rowValues);
+    });
+    console.log(jsonData)
+    if(jsonData){
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+      }
+    });
+  }
+  const record= await Result.create({
+    total_Subjects_and_Marks_Info:jsonData,
+    domain:req.user.collegeName
+  })
+  if(!record){
+    return res.status(500).json({message:"Internal Server Error"});
+  }
+
+  return res.status(200).json({jsonData,message:"Excel File uploaded Successfully"})
 }
-return res.status(400).json({message:"Error in File Upload"})
+catch (error) {
+  console.log(error);
 }
-export {registerUser,loginUser,logoutUser,checkIfUserisAuthorizedtoBeAdmin,handleExcelSubmission}
+}
+const assignExamResultandReturntoUser=async (req)=>{ 
+const resultRecord= await Result.findOne(req.user.collegeName);
+if(!resultRecord){
+  return res.status(500).json({message:"Exam Result has not been uploaded by Admin"})
+}
+const filteredData=resultRecord.filter((item)=>{item[0]==req.user.rollno})
+if(!filteredData){
+  return res.status(400).json({message:"User does not have a result in afffiliated College"})
+}
+return res.status(200).json({filteredData,message:"Exam Result Retrieved Successfully"});
+}
+export {registerUser,loginUser,logoutUser,checkIfUserisAuthorizedtoBeAdmin,handleExcelSubmission,assignExamResultandReturntoUser}

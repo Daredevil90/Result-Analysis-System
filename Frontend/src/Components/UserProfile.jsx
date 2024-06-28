@@ -1,6 +1,5 @@
-import React from 'react'
+
 import Profile from './ui/Profile'
-import axios from 'axios'
 import { useSelector } from 'react-redux'
 import Notauthenticated from './ui/Notauthenticated'
 

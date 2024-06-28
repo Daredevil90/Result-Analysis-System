@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { type } from "os";
 const userSchema = new mongoose.Schema({
 
     fullname:{
@@ -11,6 +12,7 @@ const userSchema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
+        unique:true
     },
     password:{
         type: String,
@@ -18,11 +20,13 @@ const userSchema = new mongoose.Schema({
     },
     collegeName:{
      type:String,
-     required:true
+     required:true,
+     unique:true,
     },
     rollno:{
         type:String,
         required:true,
+        unique:true,
     },
     dob:{
         type:String,

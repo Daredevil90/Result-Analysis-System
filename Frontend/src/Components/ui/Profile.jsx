@@ -1,7 +1,7 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';   
-import { Box, Button, Container, Typography } from "@mui/material"; 
+import { Box,Typography } from "@mui/material"; 
 import { TextField,Divider } from "@mui/material";
 import Logout from "../../Logout";
 
@@ -63,7 +63,7 @@ export default function Profile({role,userData})
         </Stack>
         <Stack direction="column" spacing={2.8} width="100%" height="50%" my={0.2} className="bg-[#e0e0e0]" padding={2} borderRadius={1} >
         {
-          textFieldItems.map((item)=>(<TextField variant="outlined" InputProps={{
+          textFieldItems.map((item,index)=>(<TextField key={index} variant="outlined" InputProps={{
             readOnly: true,
           }}
           defaultValue={item.text}

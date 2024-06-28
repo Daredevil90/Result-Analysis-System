@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Button } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { logout } from './store/authSlice';
 import ErrorPrint from './Components/utils/ErrorPrint';
 import { Navigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+
 
 export default function Logout() {
   const [loggedOut, setLoggedOut] = useState(false);
   const [error, setError] = useState(null);
-  const authStatus = useSelector((state) => state.auth.status);
   const dispatch = useDispatch();
 
   const logoutConfirmation = async () => {

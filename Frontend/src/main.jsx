@@ -11,6 +11,7 @@ import UserProfile from './Components/UserProfile.jsx'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AdminFileUpload from './Components/AdminFileUpload.jsx'
+import Result from './Components/Result.jsx'
 const router= createBrowserRouter([
   {
     path:"/",
@@ -38,6 +39,10 @@ const router= createBrowserRouter([
    {
     path:"/admin/upload",
     element:<AdminFileUpload/>
+   },
+   {
+    path:"/result",
+    element:<Result/>
    }
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
