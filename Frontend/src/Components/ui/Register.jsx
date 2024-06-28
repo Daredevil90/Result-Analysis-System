@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import FormHelperText from "../utils/FormHelperText";
 import { Link, Typography } from "@mui/material";
 import {Box} from "@mui/material";
 
 export default function Register() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const { register, handleSubmit, control} = useForm();
 
   const sendData = async (data) => {
     setIsClicked(true);

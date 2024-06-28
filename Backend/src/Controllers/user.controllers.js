@@ -128,11 +128,14 @@ const checkIfUserisAuthorizedtoBeAdmin=async (req,res)=>{
 }
 const handleExcelSubmission=async (req,res)=>{
 try {
+  const {exam_name,exam_date} = req.body;
+  if(!exam_name || !exam_date){
+   return res.status(401).json({message:"Information not sent properly or missing"})
+  }
   const excelFile = req.file
   if(!excelFile){
     return res.status(400).json({message:"Error in File Upload"})
   }
-  console.log(excelFile);
     const filePath = req.file.path;
    const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(filePath);
@@ -156,7 +159,9 @@ try {
   }
   const record= await Result.create({
     total_Subjects_and_Marks_Info:jsonData,
-    domain:req.user.collegeName
+    domain:req.user.collegeName,
+    examination_name:exam_name,
+    exam_date:exam_date
   })
   if(!record){
     return res.status(500).json({message:"Internal Server Error"});
@@ -169,7 +174,8 @@ catch (error) {
 }
 }
 const assignExamResultandReturntoUser=async (req)=>{ 
-const resultRecord= await Result.findOne(req.user.collegeName);
+  const {exam_name}= req.body;
+const resultRecord= await Result.find({$and:[{domain:req.user.collegeName},{examination_name:exam_name,}]});
 if(!resultRecord){
   return res.status(500).json({message:"Exam Result has not been uploaded by Admin"})
 }
