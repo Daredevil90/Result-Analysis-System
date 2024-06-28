@@ -5,7 +5,7 @@ import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FormHelperText from "../utils/FormHelperText";
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import {Box} from "@mui/material";
 
 export default function Register() {
@@ -93,9 +93,9 @@ export default function Register() {
         )}
       />
       <Button variant="contained" id="RegButton" type="submit">Sign Up</Button>
-      {isClicked && (
-        <FormHelperText isRegistered={isRegistered} helperText={"User already exists,"} routepathText={"Login Here"} />
-      )}
+      <Box component="div">
+        <Typography><Link href="/login">Already have an account? Sign In</Link></Typography>
+      </Box>
     </Box>
   );
 }

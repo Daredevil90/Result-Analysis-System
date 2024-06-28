@@ -32,7 +32,7 @@ export default function Logout() {
   }
   return (
     <>
-      <Button variant="contained" onClick={logoutConfirmation}  className='w-1/2 left-32' size="medium">Logout</Button>
+      <Button variant="contained" onClick={logoutConfirmation}  className='w-1/2 left-24'  size="medium" color='inherit'>Logout</Button>
       {loggedOut && <Navigate to="/" />}
       {error && <ErrorPrint content={error} />}
     </>

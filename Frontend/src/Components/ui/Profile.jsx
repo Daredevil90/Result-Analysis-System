@@ -2,8 +2,9 @@ import React from "react";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';   
 import { Box, Button, Container, Typography } from "@mui/material"; 
-import { TextField } from "@mui/material";
+import { TextField,Divider } from "@mui/material";
 import Logout from "../../Logout";
+
 function stringToColor(string) {
     let hash = 0;
     let i;
@@ -32,56 +33,47 @@ function stringAvatar(name) {
       children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
     };
   }
-  
+
 export default function Profile({role,userData})
 {    const newDob= new Date(userData.dob);
+  const textFieldItems=[
+    {
+      text:userData.email,
+      label:"Email"
+    },
+    {
+      text:userData.collegeName,
+      label:"Affiliated College"
+    },
+    {
+      text:userData.rollno,
+      label:"Roll No."
+    },
+    {
+      text:newDob.toLocaleDateString(),
+      label:'Date of Birth'
+    }
+  ]
     return(
-           <Container minWidth="xs" maxWidth="sm" className="my-2 profile-container " >
-            <Box height={300}>
-             <Stack direction="column" spacing={2} className=" h-full w-full flex    bg-[#0066CC]" justifyContent="center"
-  alignItems="center">
-              <Avatar {...stringAvatar(userData.fullname)} sx={{ width: 100, height: 100 }} className="" />
-              <Typography variant="h5">{userData.fullname}</Typography>
-              <Typography>{role}</Typography>
-            </Stack>
-            </Box>
-            <Box my={3} >
-            <Stack direction="column" spacing={2} >
-           <TextField
-          id="outlined-read-only-input"
-          label="Email Address"
-          defaultValue={userData.email}
-          InputProps={{
+      <Box component={'div'} display="flex" flexDirection={'column'} justifyContent="center" alignItems="center" maxWidth="sm" margin="auto" width="30%" padding={1} height="screen">
+        <Stack component={"div"} direction="column" spacing={3}  divider={<Divider orientation="horizontal" flexItem className="bg-black" /> } alignItems={"center"} className="bg-[#9e9e9e]" width="100%" padding={4} borderRadius={1} height="50%"> 
+        <Avatar {...stringAvatar(userData.fullname)}   sx={{ width: 60, height: 60 }} />
+        <Typography  textAlign={"center"} variant="h4">{userData.fullname}</Typography>
+        <Typography    textAlign={"center"}   variant="h5">{role}</Typography>
+        </Stack>
+        <Stack direction="column" spacing={2.8} width="100%" height="50%" my={0.2} className="bg-[#e0e0e0]" padding={2} borderRadius={1} >
+        {
+          textFieldItems.map((item)=>(<TextField variant="outlined" InputProps={{
             readOnly: true,
           }}
-        />
-           <TextField
-          id="outlined-read-only-input"
-          label="Affiliated College"
-          defaultValue={userData.collegeName}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-           <TextField
-          id="outlined-read-only-input"
-          label="Roll Number"
-          defaultValue={userData.rollno}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-           <TextField
-          id="outlined-read-only-input"
-          label="Date of Birth "
-          defaultValue={newDob.toLocaleDateString()}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-          <Logout/>
-            </Stack>
-            </Box>
-            </Container>
+          defaultValue={item.text}
+          label={item.label}
+          color="secondary"
+        
+          />))
+        }
+        <Logout></Logout>
+        </Stack>
+      </Box>
     )
 }
