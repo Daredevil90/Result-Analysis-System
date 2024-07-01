@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
-import  { useState } from "react";
+
+import React, { useEffect, useState  } from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from "axios";
@@ -8,10 +7,12 @@ import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Link, Typography } from "@mui/material";
 import {Box} from "@mui/material";
+import { ToastContainer,toast } from "react-toastify";
 
 export default function Register() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [error,setError]= useState('Could not Register User')
   const { register, handleSubmit, control} = useForm();
 
   const sendData = async (data) => {
@@ -21,15 +22,30 @@ export default function Register() {
       console.log("response data:", response.data, response.status);
       if (response.status === 200) {
         setIsRegistered(true);
+         
       } else {
         setIsRegistered(false);
+        setError(response.data.message)
       }
     } catch (error) {
       console.log(error);
       setIsRegistered(false);
     }
   };
-
+    const successNotif= useEffect(()=>{
+      if(isRegistered){
+      toast.success("Registration Complete ",{
+      position: "top-center",
+      autoClose:"true",
+      });
+    }
+    else{
+     toast.error(error,{
+    position:"top-center",
+    autoClose:"true",
+   })
+    }
+  },[isRegistered])
   return (
     <Box  component="form"  display="flex" flexDirection="column" gap={3} 
     alignItems="center" textAlign="center"  maxWidth="sm" className=" m-auto my-9 bg-[#e0e0e0]" onSubmit={handleSubmit(sendData)} padding={1} borderRadius={3}>
@@ -93,10 +109,13 @@ export default function Register() {
           />
         )}
       />
-      <Button variant="contained" id="RegButton" type="submit" color="inherit">Sign Up</Button>
+      <Button variant="contained" id="RegButton" type="submit" color="inherit" onClick={successNotif}>Sign Up</Button>
+      
       <Box component="div">
         <Typography><Link href="/login">Already have an account? Sign In</Link></Typography>
       </Box>
+      <ToastContainer />
     </Box>
+   
   );
 }
