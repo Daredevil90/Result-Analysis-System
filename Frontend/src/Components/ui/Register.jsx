@@ -11,12 +11,10 @@ import { ToastContainer,toast } from "react-toastify";
 
 export default function Register() {
   const [isRegistered, setIsRegistered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
   const [error,setError]= useState('Could not Register User')
   const { register, handleSubmit, control} = useForm();
 
   const sendData = async (data) => {
-    setIsClicked(true);
     try {
       const response = await axios.post('http://localhost:3000/api/v1/users/register', data);
       console.log("response data:", response.data, response.status);
@@ -110,9 +108,8 @@ export default function Register() {
         )}
       />
       <Button variant="contained" id="RegButton" type="submit" color="inherit" onClick={successNotif}>Sign Up</Button>
-      
       <Box component="div">
-        <Typography><Link href="/login">Already have an account? Sign In</Link></Typography>
+      <Typography><Link href="/login">Already have an account? Sign In</Link></Typography>
       </Box>
       <ToastContainer />
     </Box>
