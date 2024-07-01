@@ -11,7 +11,7 @@ import { ToastContainer,toast } from "react-toastify";
 
 export default function Register() {
   const [isRegistered, setIsRegistered] = useState(false);
-  const [error,setError]= useState('Could not Register User')
+  const [error,setError]= useState(null)
   const { register, handleSubmit, control} = useForm();
 
   const sendData = async (data) => {
