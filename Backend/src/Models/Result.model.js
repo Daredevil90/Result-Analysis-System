@@ -3,14 +3,19 @@ import { type } from "os";
 const resultSchema= new mongoose.Schema({
 total_Subjects_and_Marks_Info:{
     type:Object,
-    required:true
+    required:true,
+    
 },
 domain:{
     type:String,
-    unique:true,
     required:true
 },
 examination_name:{
+    type:String,
+    required:true,
+    unique:true
+},
+semester:{
     type:String,
     required:true
 },

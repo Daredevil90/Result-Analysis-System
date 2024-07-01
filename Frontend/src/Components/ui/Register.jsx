@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+import React from "react";
 import  { useState } from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -30,7 +32,7 @@ export default function Register() {
 
   return (
     <Box  component="form"  display="flex" flexDirection="column" gap={3} 
-    alignItems="center" textAlign="center"  maxWidth="sm" className=" m-auto my-9" onSubmit={handleSubmit(sendData)}>
+    alignItems="center" textAlign="center"  maxWidth="sm" className=" m-auto my-9 bg-[#e0e0e0]" onSubmit={handleSubmit(sendData)} padding={1} borderRadius={3}>
        <Typography variant="h4" alignSelf="center" className=""  >Sign Up</Typography> 
       <TextField 
          className="sm:w-1/2"
@@ -91,7 +93,7 @@ export default function Register() {
           />
         )}
       />
-      <Button variant="contained" id="RegButton" type="submit">Sign Up</Button>
+      <Button variant="contained" id="RegButton" type="submit" color="inherit">Sign Up</Button>
       <Box component="div">
         <Typography><Link href="/login">Already have an account? Sign In</Link></Typography>
       </Box>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
@@ -11,7 +12,7 @@ import UserProfile from './Components/UserProfile.jsx'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AdminFileUpload from './Components/AdminFileUpload.jsx'
-import Result from './Components/Result.jsx'
+import ResultWrapper from './Components/ResultWrapper.jsx'
 const router= createBrowserRouter([
   {
     path:"/",
@@ -42,7 +43,7 @@ const router= createBrowserRouter([
    },
    {
     path:"/result",
-    element:<Result/>
+    element:<ResultWrapper/>
    }
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(

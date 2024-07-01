@@ -128,7 +128,7 @@ const checkIfUserisAuthorizedtoBeAdmin=async (req,res)=>{
 }
 const handleExcelSubmission=async (req,res)=>{
 try {
-  const {exam_name,exam_date} = req.body;
+  const {exam_name,exam_date,exam_sem} = req.body;
   if(!exam_name || !exam_date){
    return res.status(401).json({message:"Information not sent properly or missing"})
   }
@@ -161,7 +161,8 @@ try {
     total_Subjects_and_Marks_Info:jsonData,
     domain:req.user.collegeName,
     examination_name:exam_name,
-    exam_date:exam_date
+    exam_date:exam_date,
+    semester:exam_sem
   })
   if(!record){
     return res.status(500).json({message:"Internal Server Error"});
@@ -170,12 +171,12 @@ try {
   return res.status(200).json({jsonData,message:"Excel File uploaded Successfully"})
 }
 catch (error) {
-  console.log(error);
+  return res.status(500).json({message:error.errorResponse.errmsg})
 }
 }
-const assignExamResultandReturntoUser=async (req)=>{ 
-  const {exam_name}= req.body;
-const resultRecord= await Result.find({$and:[{domain:req.user.collegeName},{examination_name:exam_name,}]});
+const assignExamResultandReturntoUser=async (req,res)=>{ 
+  const {exam_name,exam_sem}= req.body;
+const resultRecord= await Result.find({$and:[{domain:req.user.collegeName},{examination_name:exam_name,},{semester:exam_sem}]});
 if(!resultRecord){
   return res.status(500).json({message:"Exam Result has not been uploaded by Admin"})
 }
