@@ -1,5 +1,5 @@
 import {Router} from "express" 
-import { assignExamResultandReturntoUser, checkIfUserisAuthorizedtoBeAdmin, handleExcelSubmission, loginUser, logoutUser, registerUser } from "../Controllers/user.controllers.js";
+import { assignExamListandReturntoUser, assignExamResultandReturntoUser, checkIfUserisAuthorizedtoBeAdmin, handleExcelSubmission, loginUser, logoutUser, registerUser } from "../Controllers/user.controllers.js";
 import verifyIfUserisLoggedIn from "../Middlewares/verifyJWT.js";
 import upload from "../Middlewares/multer.middleware.js"
 
@@ -10,5 +10,5 @@ userRouter.route("/login").post(loginUser);
 userRouter.route("/logout").post(verifyIfUserisLoggedIn,logoutUser);
 userRouter.route("/AdminAccess").post(verifyIfUserisLoggedIn,checkIfUserisAuthorizedtoBeAdmin)
 userRouter.route("/uploadExcel").post(verifyIfUserisLoggedIn,upload.single('excelFile'),handleExcelSubmission)
-userRouter.route("/fetch-result").post(verifyIfUserisLoggedIn,assignExamResultandReturntoUser)
+userRouter.route("/fetch-result").post(verifyIfUserisLoggedIn,assignExamListandReturntoUser)
 export default userRouter;

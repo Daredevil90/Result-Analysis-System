@@ -13,6 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AdminFileUpload from './Components/AdminFileUpload.jsx'
 import ResultWrapper from './Components/ResultWrapper.jsx'
+import Result from './Components/Result.jsx'
 const router= createBrowserRouter([
   {
     path:"/",
@@ -42,8 +43,12 @@ const router= createBrowserRouter([
     element:<AdminFileUpload/>
    },
    {
+    path:"/resultlist",
+    element:<ResultWrapper/>,
+   },
+   {
     path:"/result",
-    element:<ResultWrapper/>
+    element:<Result/>
    }
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(

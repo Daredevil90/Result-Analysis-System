@@ -33,7 +33,7 @@ const navitems=[
   {
     component:NavLink,
     text:"Result",
-    slug:"/result",
+    slug:"/resultlist",
     variant:"h5"
   }
 ]

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography, Select } from "@mui/material";
 import { Box } from "@mui/material";
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 import { useForm, Controller } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -9,14 +11,17 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { DatePicker } from "@mui/x-date-pickers";
 import { toast, ToastContainer } from 'react-toastify';
+import {FormControl} from "@mui/material";
 import "react-toastify/dist/ReactToastify.css";
-
 function AdminFileUpload() {
   const authStatus = useSelector((state) => state.auth.status);
   const [successStatus, setSuccessStatus] = useState(false);
   const [error, setError] = useState(null);
   const { register, handleSubmit, control } = useForm();
-
+  const [examName, setExamName] = useState('');
+  const handleChange = (event) => {
+   setExamName(event.target.value)
+  };
   const FileSubmit = async (data) => {
     const formData = new FormData();
     formData.append('excelFile', data.excelFile[0]);
@@ -61,8 +66,36 @@ function AdminFileUpload() {
   return (
     authStatus ? (
       <Box component="form" alignItems={'center'} justifyContent={'center'} flexDirection="column" className="bg-[#e0e0e0]" display={'flex'} padding={3} minWidth="xs" maxWidth="sm" margin={"auto"} my={13} gap={3} onSubmit={handleSubmit(FileSubmit)} borderRadius={4}>
-        <Typography variant='h4'>Upload Result Data</Typography>
-        <TextField variant="outlined" label="Exam Name" {...register("exam_name")} required sx={{ width: "50%" }} color="secondary" helperText="Exam Names cannot be used twice" />
+      <Typography variant='h4'>Upload Result Data</Typography>
+      <FormControl sx={{ width: "50%" }}>
+      <InputLabel id="exam-name-label">Exam Name</InputLabel>
+      <Controller
+        name="exam_name"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <Select
+            {...field}
+            labelId="exam-name-label"
+            value={examName}
+            onChange={(event) => {
+              handleChange(event);
+              field.onChange(event);
+            }}
+            label="Exam Name"
+             required
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={"IA-1"}>IA-1</MenuItem>
+            <MenuItem value={"IA-2"}>IA-2</MenuItem>
+            <MenuItem value={"Mid-Semester"}>Mid-Semester</MenuItem>
+            <MenuItem value={"End-Semester"}>End-Semester</MenuItem>
+          </Select>
+        )}
+      />
+    </FormControl>
         <TextField variant="outlined" label="Semester" {...register("exam_sem")} required sx={{ width: "50%" }} color="secondary" />
         <Controller
           name="exam_date"

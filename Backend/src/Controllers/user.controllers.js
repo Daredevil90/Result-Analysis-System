@@ -149,7 +149,6 @@ try {
       const rowValues = row.values.slice(1); // Remove the empty first element
       jsonData.push(rowValues);
     });
-    console.log(jsonData)
     if(jsonData){
     fs.unlink(filePath, (err) => {
       if (err) {
@@ -167,12 +166,31 @@ try {
   if(!record){
     return res.status(500).json({message:"Internal Server Error"});
   }
-
-  return res.status(200).json({jsonData,message:"Excel File uploaded Successfully"})
+return res.status(200).json({jsonData,message:"Excel File uploaded Successfully"})
 }
 catch (error) {
   return res.status(500).json({message:error.errorResponse.errmsg})
 }
+}
+const assignExamListandReturntoUser= async (req,res)=>{
+ try { 
+ const record = await Result.find({$and:[{domain:req.user.collegeName},{
+  $or: [
+    { examination_name: "IA-1" },
+    { examination_name: "IA-2" },
+    { examination_name: "Mid-Semester" },
+    { examination_name: "End-Semester" }
+  ]
+}]}).select("-domain -createdAt -updatedAt");
+ console.log(record)
+ if(!record){
+  return res.status(500).json({message:"Error in Fetching Results"});
+ } 
+ return res.status(200).json({message:"Result Categories successfully Found",record});
+} 
+catch (error) {
+  return res.status(500).json(error.message);
+ }
 }
 const assignExamResultandReturntoUser=async (req,res)=>{ 
   const {exam_name,exam_sem}= req.body;
@@ -186,4 +204,4 @@ if(!filteredData){
 }
 return res.status(200).json({filteredData,message:"Exam Result Retrieved Successfully"});
 }
-export {registerUser,loginUser,logoutUser,checkIfUserisAuthorizedtoBeAdmin,handleExcelSubmission,assignExamResultandReturntoUser}
+export {registerUser,loginUser,logoutUser,checkIfUserisAuthorizedtoBeAdmin,handleExcelSubmission,assignExamResultandReturntoUser,assignExamListandReturntoUser}
