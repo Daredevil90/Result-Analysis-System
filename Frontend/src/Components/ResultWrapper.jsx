@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 function ResultWrapper() {
   
  const navigate = useNavigate();
@@ -31,7 +32,11 @@ function ResultWrapper() {
   }, []); // Empty dependency array means this effect runs once after initial render
 
   if (!record) {
-    return <div>Loading...</div>;
+    return(
+      <Box sx={{ display: 'flex' }}>
+      <CircularProgress />
+    </Box>
+    )
   }
 const handleClick = (row) => {
   console.log(row)
@@ -60,8 +65,7 @@ const handleClick = (row) => {
               <TableCell align="center" key={row.semester} >{row.semester}/{new Date(row.exam_date).getFullYear()}</TableCell>
               <TableCell align="center" key={row.examination_name}>{row.examination_name}</TableCell>
               <TableCell key={row._id}><Button variant="contained" color="inherit" onClick={() => handleClick(row)}>View</Button></TableCell>
-          </TableRow>
-           )
+          </TableRow>)
           })  
         }
         </TableBody>  

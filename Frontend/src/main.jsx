@@ -14,6 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AdminFileUpload from './Components/AdminFileUpload.jsx'
 import ResultWrapper from './Components/ResultWrapper.jsx'
 import Result from './Components/Result.jsx'
+import Logout from './Logout.jsx'
 const router= createBrowserRouter([
   {
     path:"/",
