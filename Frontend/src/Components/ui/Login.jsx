@@ -44,8 +44,8 @@ export default function Login()
     <Box component="form"  display="flex" flexDirection="column" gap={4} 
     alignItems="center" textAlign="center" minWidth="xs" maxWidth="sm" className=" m-auto bg-[#e0e0e0] relative top-32" onSubmit={handleSubmit(sendData)}padding={2} borderRadius={10} width="35vw">
     <Typography variant="h4" className="text-center">Sign In</Typography>
-    <TextField id="outlined-basic" label="Email Address" variant="outlined" {...register("email")}  className="sm:w-1/2 m-1"/>
-    <TextField id="outlined-basic" label="Password" type="password" variant="outlined" {...register("password")}  className="sm:w-1/2 m-1" />
+    <TextField id="outlined-basic" label="Email Address" variant="outlined" {...register("email")}  className="sm:w-1/2 m-1" required/>
+    <TextField id="outlined-basic" label="Password" type="password" variant="outlined" {...register("password")}  className="sm:w-1/2 m-1" required/>
     <Mui_link component="button" variant="h6" className="m-auto"><Link to="/register">New Here? Register Now</Link></Mui_link>
     <Button variant="contained" className="w-1/4" type="submit" color="inherit">Sign In</Button>
     {authStatus &&(<Navigate to="/"/>)}
