@@ -5,6 +5,6 @@
 3) Use the same commands for frontend
 4) Use the link provided in the terminal for Frontend to use the Project
 ### Note
-While uploading the Excel use the format specified in the sample excel file provided in the publics directory in Backend
+While uploading the Excel use the format specified in the sample excel file provided in the public/Excel directory in Backend
 
    
