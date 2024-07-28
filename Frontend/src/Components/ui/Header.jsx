@@ -20,9 +20,9 @@ export default function Header() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
-  const user = useSelector((state) => state.auth.userData); // Assuming the user data is stored here
+  const user = useSelector((state) => state.auth.userData);
 
-  const isAdmin = user && user.isAdmin; // Check if user exists and has isAdmin flag
+  const isAdmin = user && user.isAdmin; 
 
   console.log('Auth Status:', authStatus);
   console.log('User:', user);
