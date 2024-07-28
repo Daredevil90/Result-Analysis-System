@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
     fullname:{
         type:String,
         required:true,
-        unique:true,
     },
     email:{
         type:String,
@@ -21,7 +20,6 @@ const userSchema = new mongoose.Schema({
     collegeName:{
      type:String,
      required:true,
-     unique:true,
     },
     rollno:{
         type:String,
@@ -30,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
     dob:{
         type:String,
-        required:true
+        
     },
     accessToken:{
         type:String
