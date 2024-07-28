@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Button, useMediaQuery, useTheme, IconButton, Menu, Men
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import MenuIcon from '@mui/icons-material/Menu';
-import { logout } from '../../store/authSlice.js'; // Adjust this import based on your Redux setup
+import { logout } from '../../store/authSlice.js';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
