@@ -1,54 +1,114 @@
-import React from "react";
-import { Link as Mui_link, TextField, Typography } from "@mui/material";
-import Button from '@mui/material/Button';
-import {useDispatch} from "react-redux"
-import { login,setAdmin } from "../../store/authSlice.js";
+import React, { useState } from "react";
+import { TextField, Typography, Button, Box, Link as MuiLink, CircularProgress, Alert } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { login, setAdmin } from "../../store/authSlice.js";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { logout } from "../../store/authSlice.js";
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import {Box} from "@mui/material";
-import { Link } from "react-router-dom";
-export default function Login()
-{  const authStatus= useSelector((state)=>state.auth.status);
-    console.log(authStatus);
-    const {
+import { Navigate, Link } from "react-router-dom";
+
+export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const authStatus = useSelector((state) => state.auth.status);
+  const dispatch = useDispatch();
+
+  const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm(); 
-  const dispatch = useDispatch()
+  } = useForm();
+
   const sendData = async (data) => {
-   
+    setLoading(true);
+    setError(null);
     try {
-      // console.log(data)
-      const response = await axios.post('http://localhost:3000/api/v1/users/login', data,{withCredentials:true});
-      console.log("response data:", response.data.updatedUser, response.status);
-      console.log(response.data.updatedUser.isAdmin);
+      const response = await axios.post('http://localhost:3000/api/v1/users/login', data, { withCredentials: true });
       if (response.status === 200) {
-      dispatch(login(response.data.updatedUser));
-      }
-      else {
-         dispatch(logout())
-      }
-      if(response.data.updatedUser.isAdmin===true){
-        dispatch(setAdmin())
+        dispatch(login(response.data.user));
+        if (response.data.user.isAdmin) {
+          dispatch(setAdmin());
+        }
       }
     } catch (error) {
-      console.log(error);
-    
+      setError(error.response?.data?.message || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-    return( 
-    <Box component="form"  display="flex" flexDirection="column" gap={4} 
-    alignItems="center" textAlign="center" minWidth="xs" maxWidth="sm" className=" m-auto bg-[#e0e0e0] relative top-32" onSubmit={handleSubmit(sendData)}padding={2} borderRadius={10} width="35vw">
-    <Typography variant="h4" className="text-center">Sign In</Typography>
-    <TextField id="outlined-basic" label="Email Address" variant="outlined" {...register("email")}  className="sm:w-1/2 m-1" required/>
-    <TextField id="outlined-basic" label="Password" type="password" variant="outlined" {...register("password")}  className="sm:w-1/2 m-1" required/>
-    <Mui_link component="button" variant="h6" className="m-auto"><Link to="/register">New Here? Register Now</Link></Mui_link>
-    <Button variant="contained" className="w-1/4" type="submit" color="inherit">Sign In</Button>
-    {authStatus &&(<Navigate to="/"/>)}
+
+  if (authStatus) {
+    return <Navigate to="/" />;
+  }
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit(sendData)}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        alignItems: "center",
+        maxWidth: 400,
+        margin: "auto",
+        marginTop: 8,
+        padding: 4,
+        borderRadius: 2,
+        boxShadow: 3,
+        backgroundColor: "background.paper",
+      }}
+    >
+      <Typography variant="h4" component="h1" gutterBottom>
+        Sign In
+      </Typography>
+      
+      {error && <Alert severity="error" sx={{ width: '100%' }}>{error}</Alert>}
+      
+      <TextField
+        fullWidth
+        label="Email Address"
+        variant="outlined"
+        {...register("email", { 
+          required: "Email is required",
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "Invalid email address"
+          }
+        })}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+      />
+      
+      <TextField
+        fullWidth
+        label="Password"
+        type="password"
+        variant="outlined"
+        {...register("password", { 
+          required: "Password is required",
+          minLength: {
+            value: 6,
+            message: "Password must be at least 6 characters"
+          }
+        })}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+      />
+      
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        fullWidth
+        disabled={loading}
+        sx={{ mt: 2 }}
+      >
+        {loading ? <CircularProgress size={24} /> : "Sign In"}
+      </Button>
+      
+      <MuiLink component={Link} to="/register" variant="body2">
+        New Here? Register Now
+      </MuiLink>
     </Box>
-    )
+  );
 }
