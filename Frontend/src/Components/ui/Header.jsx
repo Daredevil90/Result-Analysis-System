@@ -1,82 +1,128 @@
 import React from 'react';
-import Stack from '@mui/material/Stack';
-import Link from '@mui/material/Link';
+import { AppBar, Toolbar, Button, useMediaQuery, useTheme, IconButton, Menu, MenuItem } from '@mui/material';
 import { NavLink } from "react-router-dom";
-import { Divider } from "@mui/material";
-import { useSelector } from "react-redux";
-import {Container} from "@mui/material";
-const navitems=[
-  {
-    component:NavLink,
-    text:"Profile",
-    slug:"/profile",
-    variant:"h5"
-  },
-  {
-    component:NavLink,
-    text:"Sign Up",
-    slug:"/register",
-     variant:"h5"
-  },
-  {
-    component:NavLink,
-    text:"Sign In",
-    slug:"/login",
-     variant:"h5"
-  },
-  {
-    component:NavLink,
-    text:"Upload Results",
-    slug:"/admin/upload",
-    variant:"h5"
-  },
-  {
-    component:NavLink,
-    text:"Result",
-    slug:"/resultlist",
-    variant:"h5"
-  }
-]
-const authallowedIndices=[0,4]
-const allowedIndices = [1,2]; 
-export default function Header()
-{    const authStatus= useSelector((state)=>state.auth.status);
-     const adminStatus = useSelector((state)=>state.auth.isAdmin);
-     console.log(adminStatus)
-    return(
-        <Container component="nav" maxWidth="xl"  className="bg-black h-20 flex" > 
-          <Stack spacing={3} direction="row"  divider={<Divider orientation="vertical" flexItem  className="bg-blue-400"/>} sx={{ color: 'primary.main' }} justifyContent="center" alignItems="center" className=" justify-center h-full">
-    { authStatus ? (
-        navitems.filter((item,index)=>authallowedIndices.includes(index)).map((item, index) => (
-          <Link key={index} component={NavLink} color="primary" variant={item.variant} to={item.slug} className="">
-            {item.text}
-          </Link>
-        ))
-      ) : null
+import { useSelector, useDispatch } from "react-redux";
+import MenuIcon from '@mui/icons-material/Menu';
+import { logout } from '../../store/authSlice.js'; // Adjust this import based on your Redux setup
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const navItems = [
+  { text: "Profile", slug: "/profile", authRequired: true },
+  { text: "Sign Up", slug: "/register", authRequired: false },
+  { text: "Sign In", slug: "/login", authRequired: false },
+  { text: "Upload Results", slug: "/admin/upload", adminRequired: true },
+  { text: "Result", slug: "/resultlist", authRequired: true },
+];
+
+export default function Header() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const dispatch = useDispatch();
+  const authStatus = useSelector((state) => state.auth.status);
+  const user = useSelector((state) => state.auth.userData); // Assuming the user data is stored here
+
+  const isAdmin = user && user.isAdmin; // Check if user exists and has isAdmin flag
+
+  console.log('Auth Status:', authStatus);
+  console.log('User:', user);
+  console.log('Is Admin:', isAdmin);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/v1/users/logout', {}, {
+        withCredentials: true
+      });
+      dispatch(logout());
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to logout. Please try again.');
     }
-    {/* {!authStatus &&( <> 
-      <Link
-      href="http://localhost:5173/profile"
-      component="button"
-      variant="h5"
-    ><NavLink to="/register">Sign Up</NavLink></Link>
-     <Link
-      component="button"
-      variant="h5"
-    ><NavLink to="/login">Sign In</NavLink></Link>
-        </>)
-    } */}
-    {
-      !authStatus ? (
-        navitems.filter((item,index)=>allowedIndices.includes(index)).map((item, index) => (
-          <Link key={index} component={NavLink} color="primary" variant={item.variant} to={item.slug} className="">
-            {item.text}
-          </Link>
-        ))
-      ) : null
+  };
+
+  const filteredNavItems = navItems.filter(item => {
+    if (item.adminRequired) {
+      return authStatus && isAdmin;
     }
-     {adminStatus && (<Link component={navitems[3].component} to={navitems[3].slug} variant={navitems[3].variant}>{navitems[3].text}</Link>) }
-      </Stack>
-        </Container>
-    )
+    if (item.authRequired) {
+      return authStatus;
+    }
+    return !authStatus;
+  });
+
+  console.log('Filtered Nav Items:', filteredNavItems);
+
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        {isMobile ? (
+          <>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenu}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              {filteredNavItems.map((item) => (
+                <MenuItem key={item.slug} onClick={handleClose} component={NavLink} to={item.slug}>
+                  {item.text}
+                </MenuItem>
+              ))}
+              {authStatus && (
+                <MenuItem onClick={() => { handleLogout(); handleClose(); }}>
+                  Logout
+                </MenuItem>
+              )}
+            </Menu>
+          </>
+        ) : (
+          <>
+            {filteredNavItems.map((item) => (
+              <Button
+                key={item.slug}
+                color="inherit"
+                component={NavLink}
+                to={item.slug}
+                sx={{ marginRight: 2 }}
+              >
+                {item.text}
+              </Button>
+            ))}
+            {authStatus && (
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            )}
+          </>
+        )}
+      </Toolbar>
+    </AppBar>
+  );
 }
